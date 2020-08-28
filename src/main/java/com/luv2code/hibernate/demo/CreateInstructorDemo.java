@@ -8,7 +8,7 @@ import com.luv2code.hibernate.entities.Course;
 import com.luv2code.hibernate.entities.Instructor;
 import com.luv2code.hibernate.entities.InstructorDetail;
 
-public class DeleteDemo {
+public class CreateInstructorDemo {
 
 	public static void main(String[] args) {
 
@@ -23,26 +23,27 @@ public class DeleteDemo {
 		Session session = factory.getCurrentSession();
 		
 		try {
-			int instructorId=2;
+			Instructor tempInstructor = 
+					new Instructor("susan", "public", "susan@luv2code.com");
+			
+			InstructorDetail tempInstructorDetail = 
+					new InstructorDetail(
+							"https://www.javaSpring.com/youtube", 
+							"Video Games");
+			
+			//Associate the Objects
+			tempInstructor.setInstructorDetail(tempInstructorDetail);
 			
 			//start/begin a transaction
 			session.beginTransaction();
 			
-			//get the instructor based on the id/primary key
-			Instructor theInstructor = session.get(Instructor.class, instructorId);
-			System.out.println("\nInstructor retreived :"+theInstructor);
+			//save the instructor into the database
+			/*Note :this will also save tempInstructorDetail object b/c
+			of CascadeType.ALL*/
 			
-			//delete the instructor
-			//Note : this will also delete the associcated InstructorDetail objec
-			//because of CascadeType.ALL
+			System.out.println("\n\nSaving the instructor :"+tempInstructor);
+			session.save(tempInstructor);
 			
-			if(theInstructor!=null){
-				System.out.println("\ndeleting the instructor :"+theInstructor);
-				session.delete(theInstructor);
-			}else{
-				System.out.println("\nInstructor doesn't available!!");
-			}
-
 			//commit the transaction
 			session.getTransaction().commit();
 			

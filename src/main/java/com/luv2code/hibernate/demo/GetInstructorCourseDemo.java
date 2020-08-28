@@ -1,5 +1,7 @@
 package com.luv2code.hibernate.demo;
 
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -8,7 +10,7 @@ import com.luv2code.hibernate.entities.Course;
 import com.luv2code.hibernate.entities.Instructor;
 import com.luv2code.hibernate.entities.InstructorDetail;
 
-public class DeleteDemo {
+public class GetInstructorCourseDemo {
 
 	public static void main(String[] args) {
 
@@ -23,26 +25,20 @@ public class DeleteDemo {
 		Session session = factory.getCurrentSession();
 		
 		try {
-			int instructorId=2;
-			
+	
 			//start/begin a transaction
 			session.beginTransaction();
 			
-			//get the instructor based on the id/primary key
-			Instructor theInstructor = session.get(Instructor.class, instructorId);
-			System.out.println("\nInstructor retreived :"+theInstructor);
+			//get the instructor
+			int theId=3;
+			Instructor theInstructor = session.get(Instructor.class, theId);
 			
-			//delete the instructor
-			//Note : this will also delete the associcated InstructorDetail objec
-			//because of CascadeType.ALL
+			System.out.println("\nInstructor :"+theInstructor);
 			
-			if(theInstructor!=null){
-				System.out.println("\ndeleting the instructor :"+theInstructor);
-				session.delete(theInstructor);
-			}else{
-				System.out.println("\nInstructor doesn't available!!");
-			}
-
+			//retrieve the courses from instructor
+			List<Course> courses = theInstructor.getCourses();
+			System.out.println("\nCourses :"+courses);
+			
 			//commit the transaction
 			session.getTransaction().commit();
 			
@@ -50,6 +46,7 @@ public class DeleteDemo {
 			
 		} catch (Exception e) {
 			session.getTransaction().rollback();
+			e.printStackTrace();
 		}finally{
 			factory.close();
 		}

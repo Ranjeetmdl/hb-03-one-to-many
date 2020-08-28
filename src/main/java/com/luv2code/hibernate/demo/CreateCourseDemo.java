@@ -8,7 +8,7 @@ import com.luv2code.hibernate.entities.Course;
 import com.luv2code.hibernate.entities.Instructor;
 import com.luv2code.hibernate.entities.InstructorDetail;
 
-public class DeleteDemo {
+public class CreateCourseDemo {
 
 	public static void main(String[] args) {
 
@@ -23,26 +23,26 @@ public class DeleteDemo {
 		Session session = factory.getCurrentSession();
 		
 		try {
-			int instructorId=2;
-			
+	
 			//start/begin a transaction
 			session.beginTransaction();
 			
-			//get the instructor based on the id/primary key
-			Instructor theInstructor = session.get(Instructor.class, instructorId);
-			System.out.println("\nInstructor retreived :"+theInstructor);
+			//get the instructor
+			int theId=1;
+			Instructor theInstructor = session.get(Instructor.class, theId);
 			
-			//delete the instructor
-			//Note : this will also delete the associcated InstructorDetail objec
-			//because of CascadeType.ALL
+			//create few courses
+			Course course1 = new Course("Air Guitar-The Ultimate class");
+			Course course2 = new Course("Pinball the masterclass");
 			
-			if(theInstructor!=null){
-				System.out.println("\ndeleting the instructor :"+theInstructor);
-				session.delete(theInstructor);
-			}else{
-				System.out.println("\nInstructor doesn't available!!");
-			}
-
+			//add courses to the instructor
+			theInstructor.add(course1);
+			theInstructor.add(course2);
+			
+			//save the courses
+			session.save(course1);
+			session.save(course2);
+			
 			//commit the transaction
 			session.getTransaction().commit();
 			
@@ -50,6 +50,7 @@ public class DeleteDemo {
 			
 		} catch (Exception e) {
 			session.getTransaction().rollback();
+			e.printStackTrace();
 		}finally{
 			factory.close();
 		}
